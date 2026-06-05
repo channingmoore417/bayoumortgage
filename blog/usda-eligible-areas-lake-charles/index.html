@@ -245,6 +245,316 @@ img{max-width:100%;display:block}
 
 <body>
 
+<!-- GLOBAL SITE HEADER -->
+<style>
+:root{--shadow-lg:0 20px 60px rgba(27,44,78,.16)}
+.site-header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;transition:box-shadow .3s;}
+.site-header.scrolled{box-shadow:0 4px 28px rgba(27,44,78,.10)}
+.header-inner{max-width:1320px;margin:0 auto;padding:0 32px;height:66px;display:flex;align-items:center;}
+.logo{display:flex;align-items:center;gap:11px;flex-shrink:0;margin-right:28px;}
+.nav{display:flex;align-items:center;gap:1px;flex:1;justify-content:center}
+.nav-item{position:relative}
+.nav-link{display:flex;align-items:center;gap:4px;padding:7px 11px;font-size:13px;font-weight:600;color:var(--navy);border-radius:8px;transition:background .16s,color .16s;cursor:pointer;white-space:nowrap;border:none;background:transparent;font-family:'Poppins',sans-serif;}
+.nav-link:hover,.nav-item.open .nav-link{background:var(--light);color:var(--blue)}
+.nav-chevron{width:13px;height:13px;flex-shrink:0;opacity:.5;transition:transform .22s cubic-bezier(.4,0,.2,1),opacity .2s;}
+.nav-item.open .nav-chevron{transform:rotate(180deg);opacity:1}
+.dropdown{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(-6px);background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg);padding:10px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,transform .2s cubic-bezier(.4,0,.2,1),visibility .2s;z-index:500;}
+.dropdown::before{content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%) rotate(45deg);width:12px;height:12px;background:#fff;border-left:1px solid var(--border);border-top:1px solid var(--border);border-radius:2px 0 0 0;}
+.nav-item.open .dropdown{opacity:1;visibility:visible;pointer-events:all;transform:translateX(-50%) translateY(0);}
+.dropdown.align-left{left:0;transform:translateY(-6px)}.dropdown.align-left::before{left:28px;transform:translateX(0) rotate(45deg)}.nav-item.open .dropdown.align-left{transform:translateY(0)}
+.dropdown.align-right{left:auto;right:0;transform:translateY(-6px)}.dropdown.align-right::before{left:auto;right:28px;transform:translateX(0) rotate(45deg)}.nav-item.open .dropdown.align-right{transform:translateY(0)}
+.dd-sm{width:230px}.dd-md{width:340px}.dd-lg{width:580px}.dd-xl{width:740px}.dd-xxl{width:860px}
+.dd-cols{display:grid;gap:4px}.dd-cols-2{grid-template-columns:1fr 1fr}.dd-cols-3{grid-template-columns:1fr 1fr 1fr}.dd-cols-4{grid-template-columns:1fr 1fr 1fr 1fr}
+.dd-section-label{font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--blue);padding:8px 10px 4px;display:block;}
+.dd-item{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:10px;transition:background .14s;cursor:pointer;}
+.dd-item:hover{background:var(--light)}
+.dd-icon{width:30px;height:30px;border-radius:8px;background:rgba(0,139,199,.10);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px;}
+.dd-icon.gold{background:rgba(201,152,42,.12);color:var(--gold)}.dd-icon.green{background:rgba(34,197,94,.10);color:#16a34a}.dd-icon.purple{background:rgba(139,92,246,.10);color:#7c3aed}.dd-icon.red{background:rgba(239,68,68,.10);color:#dc2626}.dd-icon.navy{background:rgba(27,44,78,.10);color:var(--navy)}
+.dd-title{font-size:12.5px;font-weight:700;color:var(--navy);line-height:1.3;display:block}.dd-desc{font-size:11px;color:var(--gray);font-weight:400;line-height:1.5;display:block;margin-top:1px}
+.dd-divider{height:1px;background:var(--border);margin:6px 0}
+.dd-footer{background:linear-gradient(135deg,var(--navy) 0%,#1a3560 100%);border-radius:10px;padding:13px 16px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.dd-footer-text{font-size:11.5px;font-weight:500;color:rgba(255,255,255,.72);line-height:1.45}.dd-footer-text strong{display:block;font-size:12.5px;font-weight:800;color:#fff;margin-bottom:2px}
+.dd-footer-btn{background:var(--blue);color:#fff;font-family:'Poppins',sans-serif;font-size:11.5px;font-weight:800;padding:8px 16px;border-radius:8px;white-space:nowrap;transition:background .2s,transform .15s;flex-shrink:0;}
+.dd-footer-btn:hover{background:#0077AB;transform:translateY(-1px)}
+.header-actions{display:flex;align-items:center;gap:8px;margin-left:16px;flex-shrink:0;}
+.hdr-phone{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--navy);padding:7px 11px;border-radius:8px;transition:background .16s;}.hdr-phone:hover{background:var(--light)}
+.btn-hdr{display:inline-flex;align-items:center;gap:5px;background:var(--blue);color:#fff;font-family:'Poppins',sans-serif;font-size:13px;font-weight:800;padding:9px 18px;border-radius:10px;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 4px 14px rgba(0,139,199,.28);white-space:nowrap;}
+.btn-hdr:hover{background:#0077AB;transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,139,199,.38)}
+.mobile-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;padding:8px;cursor:pointer;border:none;background:transparent;margin-left:auto;}
+.mobile-toggle span{display:block;width:22px;height:2px;background:var(--navy);border-radius:2px;transition:transform .25s,opacity .25s;}
+.mobile-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}.mobile-toggle.open span:nth-child(2){opacity:0}.mobile-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-nav{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:998;overflow-y:auto;padding:90px 24px 40px;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+.mobile-nav.open{transform:translateX(0)}
+.mob-label{font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#006d9e;margin:20px 0 6px;}
+.mob-link{display:flex;align-items:center;justify-content:space-between;padding:11px 4px;font-size:14.5px;font-weight:700;color:var(--navy);border-bottom:1px solid var(--border);transition:color .15s;}.mob-link:hover{color:var(--blue)}
+.mob-cta-wrap{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.mob-btn-primary{display:block;text-align:center;background:var(--blue);color:#fff;font-family:'Poppins',sans-serif;font-size:15px;font-weight:800;padding:14px;border-radius:12px;box-shadow:0 4px 16px rgba(0,139,199,.28);}
+.mob-btn-secondary{display:block;text-align:center;background:var(--light);color:var(--navy);font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;padding:14px;border-radius:12px;}
+@media(max-width:1160px){.nav-link{font-size:12.5px;padding:7px 9px}.header-inner{padding:0 24px}}
+@media(max-width:1040px){.nav,.header-actions{display:none}.mobile-toggle{display:flex}.mobile-nav{display:block}.logo{margin-right:0}}
+@media(max-width:480px){.header-inner{padding:0 20px}}
+</style>
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <img src="https://assets.cdn.filesafe.space/oEIlQOv4C2ZirNFvg7QJ/media/64b0048711553d23dbe46d69.png" alt="Bayou Mortgage" width="144" height="48" style="height:48px;width:auto;display:block;" />
+    </a>
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+
+      <!-- BUY A HOME -->
+      <div class="nav-item">
+        <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+          Buy a Home<svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="dropdown dd-xxl align-left">
+          <div class="dd-cols" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr;padding:4px">
+            <div>
+              <span class="dd-section-label">FHA Loans</span>
+              <a href="/fha-loan/" class="dd-item"><div class="dd-icon">🏠</div><div><span class="dd-title">FHA Loan Overview</span><span class="dd-desc">3.5% down, flexible credit</span></div></a>
+              <a href="/fha-loan/requirements/" class="dd-item"><div class="dd-icon">📋</div><div><span class="dd-title">FHA Requirements</span><span class="dd-desc">Credit, income, property</span></div></a>
+              <a href="/fha-loan/down-payment/" class="dd-item"><div class="dd-icon">💰</div><div><span class="dd-title">Down Payment Guide</span><span class="dd-desc">3.5% down + gift funds</span></div></a>
+              <a href="/fha-loan/credit-score/" class="dd-item"><div class="dd-icon">📊</div><div><span class="dd-title">Credit Score Guide</span><span class="dd-desc">580+ for 3.5% down</span></div></a>
+              <a href="/fha-loan-quote/" class="dd-item"><div class="dd-icon gold">💬</div><div><span class="dd-title">Get FHA Quote</span><span class="dd-desc">Free, no credit pull</span></div></a>
+            </div>
+            <div>
+              <span class="dd-section-label">VA Loans</span>
+              <a href="/va-loan/" class="dd-item"><div class="dd-icon red">🇺🇸</div><div><span class="dd-title">VA Loan Overview</span><span class="dd-desc">$0 down for veterans</span></div></a>
+              <a href="/va-loan/eligibility/" class="dd-item"><div class="dd-icon">🪖</div><div><span class="dd-title">VA Eligibility</span><span class="dd-desc">Who qualifies</span></div></a>
+              <a href="/va-loan/funding-fee/" class="dd-item"><div class="dd-icon">📋</div><div><span class="dd-title">VA Funding Fee</span><span class="dd-desc">Fee tables & exemptions</span></div></a>
+              <a href="/va-loan/certificate-of-eligibility/" class="dd-item"><div class="dd-icon">📄</div><div><span class="dd-title">Get Your COE</span><span class="dd-desc">Certificate of Eligibility</span></div></a>
+              <a href="/va-loan-quote/" class="dd-item"><div class="dd-icon gold">💬</div><div><span class="dd-title">Get VA Quote</span><span class="dd-desc">Check your eligibility</span></div></a>
+            </div>
+            <div>
+              <span class="dd-section-label">USDA Loans</span>
+              <a href="/usda-loan/" class="dd-item"><div class="dd-icon green">🌾</div><div><span class="dd-title">USDA Loan Overview</span><span class="dd-desc">$0 down in rural areas</span></div></a>
+              <a href="/usda-loan/eligible-areas/" class="dd-item"><div class="dd-icon">📍</div><div><span class="dd-title">Eligible Areas</span><span class="dd-desc">Check your address</span></div></a>
+              <a href="/usda-loan/income-limits/" class="dd-item"><div class="dd-icon">💵</div><div><span class="dd-title">Income Limits</span><span class="dd-desc">Household income caps</span></div></a>
+              <a href="/usda-loan/requirements/" class="dd-item"><div class="dd-icon">📋</div><div><span class="dd-title">USDA Requirements</span><span class="dd-desc">Full eligibility guide</span></div></a>
+              <a href="/usda-loan-quote/" class="dd-item"><div class="dd-icon gold">💬</div><div><span class="dd-title">Get USDA Quote</span><span class="dd-desc">Check eligibility</span></div></a>
+            </div>
+            <div>
+              <span class="dd-section-label">Conventional</span>
+              <a href="/conventional-loan/" class="dd-item"><div class="dd-icon navy">🏦</div><div><span class="dd-title">Conventional Overview</span><span class="dd-desc">3–20% down, great rates</span></div></a>
+              <a href="/conventional-loan/jumbo/" class="dd-item"><div class="dd-icon gold">💎</div><div><span class="dd-title">Jumbo Loans</span><span class="dd-desc">Above $806,500</span></div></a>
+              <a href="/15-year-fixed/" class="dd-item"><div class="dd-icon navy">⚡</div><div><span class="dd-title">15-Year Fixed</span><span class="dd-desc">Build equity faster</span></div></a>
+              <a href="/30-year-fixed/" class="dd-item"><div class="dd-icon navy">📅</div><div><span class="dd-title">30-Year Fixed</span><span class="dd-desc">Lower monthly payment</span></div></a>
+              <a href="/conventional-loan/pmi/" class="dd-item"><div class="dd-icon">🔓</div><div><span class="dd-title">PMI Guide</span><span class="dd-desc">How to avoid or cancel</span></div></a>
+            </div>
+            <div>
+              <span class="dd-section-label">First-Time Buyers</span>
+              <a href="/first-time-homebuyer/" class="dd-item"><div class="dd-icon purple">⭐</div><div><span class="dd-title">First-Time Buyer Guide</span><span class="dd-desc">Programs & assistance</span></div></a>
+              <a href="/fha-loan/down-payment-assistance/" class="dd-item"><div class="dd-icon green">🎁</div><div><span class="dd-title">Down Payment Assistance</span><span class="dd-desc">Grants & programs</span></div></a>
+              <a href="/conventional-loan/3-percent-down/" class="dd-item"><div class="dd-icon">💲</div><div><span class="dd-title">3% Down Programs</span><span class="dd-desc">HomeReady & Home Possible</span></div></a>
+              <a href="/non-qm-loans/" class="dd-item"><div class="dd-icon purple">🧩</div><div><span class="dd-title">Non-QM Loans</span><span class="dd-desc">Self-employed & non-traditional</span></div></a>
+            </div>
+          </div>
+          <div class="dd-divider" style="margin:6px 10px"></div>
+          <div style="padding:0 4px 4px">
+            <div class="dd-footer">
+              <div class="dd-footer-text"><strong>Not sure which loan is right for you?</strong>Tell us your situation — we'll match you to the best program.</div>
+              <a href="/get-a-quote/" class="dd-footer-btn">Get Free Quote &#8594;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REFINANCE -->
+      <div class="nav-item">
+        <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+          Refinance<svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="dropdown dd-lg align-left">
+          <div class="dd-cols dd-cols-3" style="padding:4px">
+            <div>
+              <span class="dd-section-label">Rate & Term</span>
+              <a href="/refinance/" class="dd-item"><div class="dd-icon navy">🔄</div><div><span class="dd-title">Rate & Term Refinance</span><span class="dd-desc">Lower your rate or term</span></div></a>
+              <a href="/fha-loan/streamline-refinance/" class="dd-item"><div class="dd-icon">🏠</div><div><span class="dd-title">FHA Streamline</span><span class="dd-desc">No appraisal, lower rate</span></div></a>
+              <a href="/va-loan/irrrl/" class="dd-item"><div class="dd-icon red">🇺🇸</div><div><span class="dd-title">VA IRRRL</span><span class="dd-desc">VA streamline refi</span></div></a>
+              <a href="/usda-loan/streamline-refinance/" class="dd-item"><div class="dd-icon green">🌾</div><div><span class="dd-title">USDA Streamline</span><span class="dd-desc">No appraisal, rate reduction</span></div></a>
+            </div>
+            <div>
+              <span class="dd-section-label">Cash-Out</span>
+              <a href="/cash-out-refinance/" class="dd-item"><div class="dd-icon green">💵</div><div><span class="dd-title">Cash-Out Refinance</span><span class="dd-desc">Pull equity from your home</span></div></a>
+              <a href="/va-loan/cash-out-refinance/" class="dd-item"><div class="dd-icon red">🇺🇸</div><div><span class="dd-title">VA Cash-Out Refi</span><span class="dd-desc">Up to 100% LTV</span></div></a>
+              <a href="/dscr-loan/cash-out-refinance/" class="dd-item"><div class="dd-icon">📈</div><div><span class="dd-title">DSCR Cash-Out Refi</span><span class="dd-desc">Investment property equity</span></div></a>
+            </div>
+            <div>
+              <span class="dd-section-label">Home Equity</span>
+              <a href="/heloc/" class="dd-item"><div class="dd-icon gold">🏡</div><div><span class="dd-title">HELOC</span><span class="dd-desc">Revolving line of credit</span></div></a>
+              <a href="/home-equity-loan/" class="dd-item"><div class="dd-icon gold">💰</div><div><span class="dd-title">Home Equity Loan</span><span class="dd-desc">Lump-sum equity access</span></div></a>
+            </div>
+          </div>
+          <div class="dd-divider" style="margin:6px 10px"></div>
+          <div style="padding:0 4px 4px">
+            <div class="dd-footer">
+              <div class="dd-footer-text"><strong>Want to see if refinancing makes sense?</strong>Free quote, no credit pull — we'll run the numbers.</div>
+              <a href="/refinance-quote/" class="dd-footer-btn">Get Refinance Quote &#8594;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DSCR LOANS -->
+      <div class="nav-item">
+        <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+          DSCR Loans<svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="dropdown dd-xl">
+          <div class="dd-cols dd-cols-3" style="padding:4px">
+            <div>
+              <span class="dd-section-label">Learn DSCR</span>
+              <a href="/dscr-loan/what-is-a-dscr-loan/" class="dd-item"><div class="dd-icon navy">📘</div><div><span class="dd-title">What Is a DSCR Loan?</span><span class="dd-desc">Qualify on rental income, not W-2s</span></div></a>
+              <a href="/dscr-loan/how-dscr-loans-work/" class="dd-item"><div class="dd-icon">⚙️</div><div><span class="dd-title">How DSCR Loans Work</span><span class="dd-desc">Process, timeline & what's reviewed</span></div></a>
+              <a href="/dscr-loan/how-to-calculate-dscr/" class="dd-item"><div class="dd-icon">📊</div><div><span class="dd-title">DSCR Calculator</span><span class="dd-desc">Run your numbers instantly</span></div></a>
+              <a href="/dscr-loan/pros-and-cons/" class="dd-item"><div class="dd-icon">⚖️</div><div><span class="dd-title">Pros & Cons</span><span class="dd-desc">Is DSCR right for your deal?</span></div></a>
+            </div>
+            <div>
+              <span class="dd-section-label">Requirements & Programs</span>
+              <a href="/dscr-loan/requirements/" class="dd-item"><div class="dd-icon green">✅</div><div><span class="dd-title">Requirements</span><span class="dd-desc">Ratio, credit, LTV, reserves</span></div></a>
+              <a href="/dscr-loan/short-term-rental/" class="dd-item"><div class="dd-icon gold">🏖️</div><div><span class="dd-title">Short-Term Rentals</span><span class="dd-desc">Airbnb & VRBO financing</span></div></a>
+              <a href="/dscr-loan/llc/" class="dd-item"><div class="dd-icon gold">🏢</div><div><span class="dd-title">DSCR for LLCs</span><span class="dd-desc">Vest property in your entity</span></div></a>
+              <a href="/dscr-loan/foreign-nationals/" class="dd-item"><div class="dd-icon">🌍</div><div><span class="dd-title">Foreign Nationals</span><span class="dd-desc">No US income docs required</span></div></a>
+            </div>
+            <div>
+              <span class="dd-section-label">Service Area</span>
+              <a href="/dscr-loan/states/" class="dd-item"><div class="dd-icon red">📍</div><div><span class="dd-title">All States We Serve</span><span class="dd-desc">View all 33 DSCR states</span></div></a>
+            </div>
+          </div>
+          <div class="dd-divider" style="margin:6px 10px"></div>
+          <div style="padding:0 4px 4px">
+            <div class="dd-footer">
+              <div class="dd-footer-text"><strong>DSCR Quote — No W-2 Required</strong>60-second form. No credit pull. Real lender options.</div>
+              <a href="/dscr-quiz/" class="dd-footer-btn">Get My DSCR Quote &#8594;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOAN PROGRAMS (direct link) -->
+      <div class="nav-item">
+        <a href="/loan-programs/" class="nav-link">Loan Programs</a>
+      </div>
+
+      <!-- RESOURCES -->
+      <div class="nav-item">
+        <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+          Resources<svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="dropdown dd-md align-right">
+          <div style="padding:4px">
+            <span class="dd-section-label">Tools</span>
+            <a href="/tools/mortgage-calculator/" class="dd-item"><div class="dd-icon navy">🧮</div><div><span class="dd-title">Mortgage Calculator</span><span class="dd-desc">Estimate payments & amortization</span></div></a>
+            <a href="/dscr-loan/how-to-calculate-dscr/" class="dd-item"><div class="dd-icon">📊</div><div><span class="dd-title">DSCR Calculator</span><span class="dd-desc">Investor ratio estimator</span></div></a>
+            <a href="/tools/home-affordability-calculator/" class="dd-item"><div class="dd-icon green">🏡</div><div><span class="dd-title">Home Affordability Calculator</span><span class="dd-desc">See how much home you can afford</span></div></a>
+            <a href="/louisiana/mortgage-rates/" class="dd-item"><div class="dd-icon green">📉</div><div><span class="dd-title">Today's Rates</span><span class="dd-desc">Live rate check</span></div></a>
+            <a href="/tools/cost-of-waiting/" class="dd-item"><div class="dd-icon red">⏱️</div><div><span class="dd-title">Cost of Waiting</span><span class="dd-desc">What delaying costs you</span></div></a>
+            <div class="dd-divider"></div>
+            <span class="dd-section-label">Education</span>
+            <a href="/classes/" class="dd-item"><div class="dd-icon gold">🎓</div><div><span class="dd-title">Free Classes</span><span class="dd-desc">Watch our on-demand homebuyer classes</span></div></a>
+            <a href="/homebuyer-academy/" class="dd-item"><div class="dd-icon purple">🏫</div><div><span class="dd-title">Homebuyer Academy</span><span class="dd-desc">Step-by-step homebuying course</span></div></a>
+            <a href="/blog/" class="dd-item"><div class="dd-icon">✍️</div><div><span class="dd-title">Blog</span><span class="dd-desc">Mortgage tips & market updates</span></div></a>
+            <a href="/faqs/" class="dd-item"><div class="dd-icon">❓</div><div><span class="dd-title">FAQs</span><span class="dd-desc">Common mortgage questions answered</span></div></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABOUT (includes Areas We Serve) -->
+      <div class="nav-item">
+        <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+          About<svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="dropdown dd-sm align-right">
+          <div style="padding:4px">
+            <a href="/about/" class="dd-item"><div class="dd-icon">🌊</div><div><span class="dd-title">About Bayou Mortgage</span></div></a>
+            <a href="/our-team/" class="dd-item"><div class="dd-icon">👥</div><div><span class="dd-title">Our Team</span></div></a>
+            <a href="/reviews/" class="dd-item"><div class="dd-icon gold">⭐</div><div><span class="dd-title">Reviews</span></div></a>
+            <a href="/contact-us/" class="dd-item"><div class="dd-icon green">✉️</div><div><span class="dd-title">Contact Us</span></div></a>
+            <div class="dd-divider"></div>
+            <a href="/areas-we-serve/" class="dd-item"><div class="dd-icon red">📍</div><div><span class="dd-title">Areas We Serve</span><span class="dd-desc">All 32 Louisiana cities</span></div></a>
+          </div>
+        </div>
+      </div>
+
+    </nav>
+    <div class="header-actions">
+      <a href="tel:3374762623" class="hdr-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.14 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0120 15h3a2 2 0 012 2.02z"/></svg>
+        337-476-2623
+      </a>
+      <a href="/get-a-quote/" class="btn-hdr">Get Free Quote <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+  <div class="mob-label">Buy a Home</div>
+  <a href="/fha-loan/" class="mob-link">FHA Loans</a>
+  <a href="/va-loan/" class="mob-link">VA Loans</a>
+  <a href="/usda-loan/" class="mob-link">USDA Loans</a>
+  <a href="/conventional-loan/" class="mob-link">Conventional Loans</a>
+  <a href="/conventional-loan/jumbo/" class="mob-link">Jumbo Loans</a>
+  <a href="/15-year-fixed/" class="mob-link">15-Year Fixed</a>
+  <a href="/30-year-fixed/" class="mob-link">30-Year Fixed</a>
+  <a href="/first-time-homebuyer/" class="mob-link">First-Time Buyers</a>
+  <a href="/non-qm-loans/" class="mob-link">Non-QM Loans</a>
+  <div class="mob-label">Refinance</div>
+  <a href="/refinance/" class="mob-link">Rate & Term Refinance</a>
+  <a href="/fha-loan/streamline-refinance/" class="mob-link">FHA Streamline Refi</a>
+  <a href="/va-loan/irrrl/" class="mob-link">VA IRRRL</a>
+  <a href="/usda-loan/streamline-refinance/" class="mob-link">USDA Streamline Refi</a>
+  <a href="/cash-out-refinance/" class="mob-link">Cash-Out Refinance</a>
+  <a href="/va-loan/cash-out-refinance/" class="mob-link">VA Cash-Out Refi</a>
+  <a href="/dscr-loan/cash-out-refinance/" class="mob-link">DSCR Cash-Out Refi</a>
+  <a href="/heloc/" class="mob-link">HELOC</a>
+  <a href="/home-equity-loan/" class="mob-link">Home Equity Loan</a>
+  <a href="/refinance-quote/" class="mob-link">Get Refinance Quote &#8594;</a>
+  <div class="mob-label">DSCR Investor Loans</div>
+  <a href="/dscr-loan/" class="mob-link">DSCR Overview</a>
+  <a href="/dscr-loan/how-to-calculate-dscr/" class="mob-link">DSCR Calculator</a>
+  <a href="/dscr-quiz/" class="mob-link">Get DSCR Quote &#8594;</a>
+  <div class="mob-label">Resources</div>
+  <a href="/loan-programs/" class="mob-link">All Loan Programs</a>
+  <a href="/classes/" class="mob-link">Free Classes</a>
+  <a href="/tools/mortgage-calculator/" class="mob-link">Mortgage Calculator</a>
+  <a href="/louisiana/mortgage-rates/" class="mob-link">Today's Rates</a>
+  <a href="/blog/" class="mob-link">Blog</a>
+  <a href="/faqs/" class="mob-link">FAQs</a>
+  <div class="mob-label">Company</div>
+  <a href="/about/" class="mob-link">About Us</a>
+  <a href="/our-team/" class="mob-link">Our Team</a>
+  <a href="/reviews/" class="mob-link">Reviews</a>
+  <a href="/areas-we-serve/" class="mob-link">Areas We Serve</a>
+  <a href="/contact-us/" class="mob-link">Contact Us</a>
+  <div class="mob-cta-wrap">
+    <a href="/get-a-quote/" class="mob-btn-primary">Get My Free Quote &#8594;</a>
+    <a href="tel:3374762623" class="mob-btn-secondary">📞 Call 337-476-2623</a>
+  </div>
+</nav>
+<script>
+(function(){
+  var hdr=document.getElementById('siteHeader');
+  if(hdr) window.addEventListener('scroll',function(){hdr.classList.toggle('scrolled',window.scrollY>8);},{passive:true});
+  document.querySelectorAll('.nav-item').forEach(function(item){
+    var btn=item.querySelector('button.nav-link');if(!btn)return;var timer;
+    var open=function(){clearTimeout(timer);document.querySelectorAll('.nav-item.open').forEach(function(o){if(o!==item)o.classList.remove('open');});item.classList.add('open');btn.setAttribute('aria-expanded','true');};
+    var close=function(){timer=setTimeout(function(){item.classList.remove('open');btn.setAttribute('aria-expanded','false');},110);};
+    btn.addEventListener('click',function(){item.classList.contains('open')?close():open();});
+    item.addEventListener('mouseenter',open);item.addEventListener('mouseleave',close);
+    var dd=item.querySelector('.dropdown');
+    if(dd){dd.addEventListener('mouseenter',function(){clearTimeout(timer);});dd.addEventListener('mouseleave',close);}
+  });
+  document.addEventListener('click',function(e){if(!e.target.closest('.nav-item'))document.querySelectorAll('.nav-item.open').forEach(function(o){o.classList.remove('open');});});
+  var toggle=document.getElementById('mobileToggle'),mob=document.getElementById('mobileNav');
+  if(toggle&&mob){
+    toggle.addEventListener('click',function(){var o=mob.classList.toggle('open');toggle.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';});
+    mob.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){mob.classList.remove('open');toggle.classList.remove('open');document.body.style.overflow='';});});
+  }
+  document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;document.querySelectorAll('.nav-item.open').forEach(function(o){o.classList.remove('open');});if(mob){mob.classList.remove('open');document.body.style.overflow='';}if(toggle)toggle.classList.remove('open');});
+})();
+</script>
+<!-- /GLOBAL SITE HEADER -->
+
 <!-- POST HERO -->
 <header class="post-hero">
   <div class="post-hero-inner">
@@ -503,7 +813,8 @@ img{max-width:100%;display:block}
 
 <!-- FOOTER -->
 <style>
-.bm-footer{background:linear-gradient(135deg,#1B2C4E,#0f1f3d);padding:56px 32px 0;font-family:'Poppins',sans-serif;}
+.bm-footer{background:linear-gradient(160deg,#008bc7 0%,#172852 100%);font-family:'Poppins',sans-serif;color:#fff;padding:56px 32px 0;margin:0;}
+.bm-footer *{box-sizing:border-box}.bm-footer a{text-decoration:none;color:inherit}
 .bmf-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;}
 .bmf-logo{display:block;margin-bottom:18px;}.bmf-logo img{height:44px;width:auto;display:block;}
 .bmf-tagline{font-size:13.5px;font-weight:300;color:rgba(255,255,255,.80);line-height:1.75;max-width:280px;margin-bottom:22px;}
@@ -511,7 +822,7 @@ img{max-width:100%;display:block}
 .bmf-contact a{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,.90);transition:color .15s;}.bmf-contact a:hover{color:#fff}
 .bmf-contact-icon{width:28px;height:28px;background:rgba(255,255,255,.15);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
 .bmf-social{display:flex;gap:8px;}
-.bmf-social a{width:36px;height:36px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.20);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .15s,border-color .15s,transform .15s;}
+.bmf-social a{width:36px;height:36px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.20);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;transition:background .15s,border-color .15s,transform .15s;}
 .bmf-social a:hover{background:rgba(255,255,255,.28);border-color:rgba(255,255,255,.50);transform:translateY(-2px);}
 .bmf-col h4{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:16px;}
 .bmf-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
@@ -529,56 +840,57 @@ img{max-width:100%;display:block}
 @media(max-width:580px){.bm-footer{padding:44px 20px 0}.bmf-inner{grid-template-columns:1fr 1fr;gap:28px;}.bmf-bottom{flex-direction:column;gap:12px;}.bmf-copyright{white-space:normal}}
 @media(max-width:400px){.bmf-inner{grid-template-columns:1fr}}
 </style>
+
 <footer class="bm-footer">
   <div class="bmf-inner">
     <div class="bmf-brand">
-      <a href="https://bayoumortgage.com/" class="bmf-logo"><img src="https://assets.cdn.filesafe.space/oEIlQOv4C2ZirNFvg7QJ/media/64d2f2f116dd2260df8634ba.png" alt="Bayou Mortgage" width="160" height="53" loading="lazy"></a>
+      <a href="/" class="bmf-logo"><img src="https://assets.cdn.filesafe.space/oEIlQOv4C2ZirNFvg7QJ/media/64d2f2f116dd2260df8634ba.png" alt="Bayou Mortgage" width="160" height="53" loading="lazy" /></a>
       <p class="bmf-tagline">Louisiana's local mortgage lender — helping families and investors get to the closing table with confidence.</p>
       <div class="bmf-contact">
         <a href="tel:3374762623"><div class="bmf-contact-icon">📞</div>337-476-2623</a>
         <a href="mailto:channing@bayoumortgage.com"><div class="bmf-contact-icon">✉️</div>channing@bayoumortgage.com</a>
-        <a href="https://bayoumortgage.com/areas-we-serve/"><div class="bmf-contact-icon">📍</div>Lake Charles, LA &amp; Statewide</a>
+        <a href="/areas-we-serve/"><div class="bmf-contact-icon">📍</div>Lake Charles, LA &amp; Statewide</a>
       </div>
       <div class="bmf-social">
-        <a href="https://www.facebook.com/bayoumortgage/" target="_blank" rel="noopener" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path></svg></a>
-        <a href="https://instagram.com/mortgagesbychanning" target="_blank" rel="noopener" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-        <a href="https://youtube.com/@mortgagesbychanning" target="_blank" rel="noopener" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#3AABF0"></polygon></svg></a>
+        <a href="https://www.facebook.com/bayoumortgage/" target="_blank" rel="noopener" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="https://instagram.com/mortgagesbychanning" target="_blank" rel="noopener" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://youtube.com/@mortgagesbychanning" target="_blank" rel="noopener" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#3AABF0"/></svg></a>
       </div>
     </div>
     <div class="bmf-col">
       <h4>Loan Programs</h4>
       <ul>
-        <li><a href="https://bayoumortgage.com/fha-loan/">FHA Loans</a></li>
-        <li><a href="https://bayoumortgage.com/va-loan/">VA Loans</a></li>
-        <li><a href="https://bayoumortgage.com/usda-loan/">USDA Loans</a></li>
-        <li><a href="https://bayoumortgage.com/conventional-loan/">Conventional</a></li>
-        <li><a href="https://bayoumortgage.com/jumbo-loan/">Jumbo Loans</a></li>
-        <li><a href="https://bayoumortgage.com/dscr-loan/">DSCR Loans</a></li>
-        <li><a href="https://bayoumortgage.com/heloc/">HELOC</a></li>
+        <li><a href="/fha-loan/">FHA Loans</a></li>
+        <li><a href="/va-loan/">VA Loans</a></li>
+        <li><a href="/usda-loan/">USDA Loans</a></li>
+        <li><a href="/conventional-loan/">Conventional</a></li>
+        <li><a href="/jumbo-loan/">Jumbo Loans</a></li>
+        <li><a href="/dscr-loan/">DSCR Loans</a></li>
+        <li><a href="/heloc/">HELOC</a></li>
       </ul>
     </div>
     <div class="bmf-col">
       <h4>Resources</h4>
       <ul>
-        <li><a href="https://bayoumortgage.com/get-a-quote/">Find My Loan</a></li>
-        <li><a href="https://bayoumortgage.com/tools/mortgage-calculator/">Mortgage Calculator</a></li>
-        <li><a href="https://bayoumortgage.com/tools/home-affordability-calculator/">Affordability Calculator</a></li>
-        <li><a href="https://bayoumortgage.com/louisiana/mortgage-rates/">Today's Rates</a></li>
-        <li><a href="https://bayoumortgage.com/first-time-homebuyer-webinar/">Free Homebuyer Webinar</a></li>
-        <li><a href="https://bayoumortgage.com/blog/">Blog</a></li>
-        <li><a href="https://bayoumortgage.com/faqs/">FAQs</a></li>
+        <li><a href="/get-a-quote/">Find My Loan</a></li>
+        <li><a href="/tools/mortgage-calculator/">Mortgage Calculator</a></li>
+        <li><a href="/tools/home-affordability-calculator/">Affordability Calculator</a></li>
+        <li><a href="/louisiana/mortgage-rates/">Today's Rates</a></li>
+        <li><a href="/first-time-homebuyer-webinar/">Free Homebuyer Webinar</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/faqs/">FAQs</a></li>
       </ul>
     </div>
     <div class="bmf-col">
       <h4>Company</h4>
       <ul>
-        <li><a href="https://bayoumortgage.com/about/">About Us</a></li>
-        <li><a href="https://bayoumortgage.com/our-team/">Our Team</a></li>
-        <li><a href="https://bayoumortgage.com/reviews/">Testimonials</a></li>
-        <li><a href="https://bayoumortgage.com/areas-we-serve/">Areas We Serve</a></li>
-        <li><a href="https://bayoumortgage.com/contact-us/">Contact Us</a></li>
-        <li><a href="https://bayoumortgage.com/privacy-policy/">Privacy Policy</a></li>
-        <li><a href="https://bayoumortgage.com/terms-of-use/">Terms of Use</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/our-team/">Our Team</a></li>
+        <li><a href="/reviews/">Testimonials</a></li>
+        <li><a href="/areas-we-serve/">Areas We Serve</a></li>
+        <li><a href="/contact-us/">Contact Us</a></li>
+        <li><a href="/privacy-policy/">Privacy Policy</a></li>
+        <li><a href="/terms-of-use/">Terms of Use</a></li>
       </ul>
     </div>
   </div>
@@ -588,7 +900,7 @@ img{max-width:100%;display:block}
       <p class="bmf-legal"><strong>Bayou Mortgage — NMLS #1845349.</strong> Licensed to originate mortgage loans in Louisiana and select states. This is not a commitment to lend. All loans subject to credit approval, income verification, and property appraisal. Rates and terms subject to change without notice. Equal Housing Lender. &nbsp;<a href="https://www.nmlsconsumeraccess.org/" target="_blank" rel="noopener">NMLS Consumer Access ↗</a></p>
       <div class="bmf-equal"><div class="bmf-equal-icon">⊜</div>Equal Housing Lender</div>
     </div>
-    <p class="bmf-copyright">© <span id="bmfYear">2026</span> Bayou Mortgage. All rights reserved.</p>
+    <p class="bmf-copyright">© <span id="bmfYear"></span> Bayou Mortgage. All rights reserved.</p>
   </div>
 </footer>
 <script>document.getElementById('bmfYear').textContent=new Date().getFullYear();</script>
